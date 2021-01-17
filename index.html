@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="style.css" />
+    <title>Document</title>
+  </head>
+  <body>
+    <canvas id="canvas"></canvas>
+    <script>
+      let canvas = document.getElementById("canvas");
+      let canvasWidth = document.documentElement.clientWidth;
+      let canvasHeight = document.documentElement.clientHeight;
+      document.getElementById("canvas").height = canvasHeight;
+      document.getElementById("canvas").width = canvasWidth;
+
+      var ctx = canvas.getContext("2d");
+
+      function draWing(x1, y1, x2, y2) {
+        ctx.beginPath();
+        ctx.moveTo(x1, y1);
+        ctx.lineTo(x2, y2);
+        ctx.lineWidth = 8;
+        ctx.lineCap = "round";
+        ctx.stroke();
+        ctx.fill();
+      }
+
+      let mouseClick = false;
+      let coorDinates = [];
+
+      var isTouchDevice = "ontouchstart" in document.documentElement;
+
+      if (isTouchDevice) {
+        if (isTouchDevice) {
+          canvas.ontouchstart = function (e) {
+            coorDinates = [
+              e.changedTouches[0].clientX,
+              e.changedTouches[0].clientY,
+            ];
+          };
+
+          canvas.ontouchend = function (e) {
+            coorDinates = [
+              e.changedTouches[0].clientX,
+              e.changedTouches[0].clientY,
+            ];
+          };
+
+          canvas.ontouchmove = function (e) {
+            draWing(
+              coorDinates[0],
+              coorDinates[1],
+              e.changedTouches[0].clientX,
+              e.changedTouches[0].clientY
+            );
+            coorDinates = [
+              e.changedTouches[0].clientX,
+              e.changedTouches[0].clientY,
+            ];
+          };
+        }
+      } else {
+        document.onmouseup = function (e) {
+          mouseClick = false;
+          coorDinates = [e.clientX, e.clientY];
+        };
+
+        document.onmousedown = function (e) {
+          mouseClick = true;
+          coorDinates = [e.clientX, e.clientY];
+        };
+
+        document.onmousemove = function (e) {
+          if (mouseClick === true) {
+            draWing(coorDinates[0], coorDinates[1], e.clientX, e.clientY);
+            coorDinates = [e.clientX, e.clientY];
+          }
+        };
+      }
+    </script>
+  </body>
+</html>
